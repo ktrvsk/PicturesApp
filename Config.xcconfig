@@ -1,0 +1,13 @@
+//
+//  Config.xcconfig
+//  PicturesApp
+//
+//  Created by Ksusha on 16.05.2022.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+ACCESS_KEY = X28cz_zbJRftgREMxa0na2SmHSglmnh_A8_s6BUWUKE
+SECRET_KEY = g812j9EP_CXQ_zJeBWWS9EGaHvtoMJAKb-PHzKpSv8c
+REDIRECT_URL = urn:ietf:wg:oauth:2.0:oob
