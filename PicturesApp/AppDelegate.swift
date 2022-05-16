@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  PicturesApp
 //
-//  Created by Ksusha on 12.05.2022.
+//  Created by Ksusha on 11.05.2022.
 //
 
 import UIKit
