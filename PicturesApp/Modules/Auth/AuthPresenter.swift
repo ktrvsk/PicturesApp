@@ -36,7 +36,7 @@ final class AuthPresenter: AuthPresenterProtocol {
         let urlToken = "https://unsplash.com/oauth/token?client_id=\(Constants.accessKey ?? "")&client_secret=\(Constants.secretKey ?? "")&redirect_uri=\(Constants.redirectUri ?? "")&code=\(code)&grant_type=authorization_code"
         
         guard let url = URL(string: urlToken) else { return }
-        Provider.shared.loadData(url: url) { [weak self] (model: UserData) in
+        Provider.shared.loadData(url: url, method: .POST) { [weak self] (model: UserData) in
             UserDefaultsStorage.shared.saveData(data: model)
             DispatchQueue.main.async {
                 self?.controller?.openNext()

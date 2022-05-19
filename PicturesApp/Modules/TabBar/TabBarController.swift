@@ -17,7 +17,7 @@ class TabBarController: UITabBarController, TabBarControllerProtocol {
 //        tabBar
         
         viewControllers = [
-            settingController(for: ViewController(), title: "first", image: .init(named: "cloud"))
+            settingController(for: ImageViewController(), title: "first", image: .init(named: "cloud"))
         ] //запихнуть все созданные экраны
     }
     
