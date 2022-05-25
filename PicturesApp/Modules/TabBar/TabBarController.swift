@@ -13,19 +13,22 @@ protocol TabBarControllerProtocol: UIViewController {}
 class TabBarController: UITabBarController, TabBarControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        tabBar
-        
-        viewControllers = [
-            settingController(for: ImageViewController(), title: "first", image: .init(named: "cloud"))
-        ] //запихнуть все созданные экраны
+        setupTabBar()
     }
     
-    // настройка экрана по отдельность
     private func settingController(for rootController: UIViewController, title: String, image: UIImage?) -> UIViewController {
         let navigationController = UINavigationController(rootViewController: rootController)
         navigationController.tabBarItem.title = title
         navigationController.tabBarItem.image = image
         return navigationController
+    }
+    
+    private func setupTabBar() {
+        viewControllers = [
+            settingController(for: ImageViewController(), title: "", image: .init(systemName: "photo.on.rectangle.angled")),
+            settingController(for: CollectionViewController(), title: "", image: .init(systemName: "rectangle.3.group")),
+            settingController(for: GalleryViewController(), title: "", image: .init(systemName: "mail.stack") ),
+            settingController(for: PageViewController(), title: "", image: .init(systemName: "ellipsis.rectangle"))
+        ]
     }
 }

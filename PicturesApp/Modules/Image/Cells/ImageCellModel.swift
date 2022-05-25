@@ -10,4 +10,5 @@ import UIKit
 struct ImageCellModel {
     let image: URL
     let title: String
+    let addInFavorites: () -> Void
 }

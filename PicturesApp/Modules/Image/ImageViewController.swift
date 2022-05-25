@@ -15,32 +15,44 @@ protocol ImageViewControllerProtocol: AnyObject {
 class ImageViewController: UIViewController, ImageViewControllerProtocol {
     
     private var presenter: ImageViewPresenterProtocol = ImageViewPresenter()
+    
     private var timer: Timer?
     
-    private let tableView = UITableView()
+    private var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(ImageCell.self, forCellReuseIdentifier: "ImageCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.contentInset.top = 10
+        return tableView
+    }()
+    
     private var arrayCell: [ImageCellModel] = []
     
-    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        return searchController
+    }()
     
     private var arrayItemsForSegmented = ["Pictures", "Favorites"]
+    
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: arrayItemsForSegmented)
-//        segmentedControl.addTarget(self, action: #selector(suitDidChange(_:)), for: .valueChanged)
+        segmentedControl.addTarget(self, action: #selector(suitDidChange(_:)), for: .valueChanged)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.selectedSegmentIndex = 0
         return segmentedControl
     }()
     
-    private lazy var addBarButtonItem: UIBarButtonItem = {
-        return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addBarButtonTap))
-    }()
-        
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.controller = self
         view.backgroundColor = .white
-//        searchController.searchBar.delegate = self
+        presenter.controller = self
         setupTableView()
         setupNavigationBar()
-//        setupSearchBar()
+        setupSearchBar()
         setupSegmentedControl()
         presenter.viewDidLoad()
     }
@@ -50,52 +62,35 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
         tableView.reloadData()
     }
     
-    // MARK: - NavigationItems action
-
-    @objc private func addBarButtonTap() {
-        print(#function)
-    }
-    
     // MARK: - Setup UI Elements
     
     private func setupTableView() {
         view.addSubview(tableView)
-        tableView.register(ImageCell.self, forCellReuseIdentifier: "ImageCell")
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        tableView.separatorStyle = .none
-        tableView.contentInset.top = 10
     }
-
-    private func setupNavigationBar()
-    {
+    
+    private func setupNavigationBar() {
         let tittleLabel = UILabel()
         tittleLabel.text = "PICTURES"
         tittleLabel.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         tittleLabel.textColor = .gray
         navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: tittleLabel)
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.rightBarButtonItem = addBarButtonItem
     }
     
-    private func setupSearchBar(){
+    private func setupSearchBar() {
         navigationItem.searchController = searchController
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-//        view.layoutSubviews()
-//        view.layoutIfNeeded()
+        searchController.searchBar.delegate = self
     }
     
-    func setupSegmentedControl(){
+    private func setupSegmentedControl() {
         view.addSubview(segmentedControl)
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         let guide = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
@@ -109,16 +104,10 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
         ])
     }
     
-//  @objc func suitDidChange(_ segmentedControl: UISegmentedControl) {
-//        switch segmentedControl.selectedSegmentIndex {
-//        case 0:
-//            self.tableView.backgroundColor=UIColor.purple
-//        case 1:
-//            self.tableView.backgroundColor=UIColor.yellow
-//        default:
-//            self.view.backgroundColor=UIColor.gray
-//        }
-//    }
+    @objc
+    func suitDidChange(_ segmentedControl: UISegmentedControl) {
+        presenter.switchState(state: .init(rawValue: segmentedControl.selectedSegmentIndex) ?? .list)
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -138,16 +127,11 @@ extension ImageViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - UISearchBarDelegate
 
-//extension ImageViewController: UISearchBarDelegate {
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        print(searchText)
-//        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
-//            self.networkDataFetcher.fetchPictures(searchTerm: searchText) { (searchResults) in
-//                searchResults?.results.map({ (picture) in
-//                    print(picture.urls["small"])
-//                })
-//            }
-//        })
-//    }
-//}
+extension ImageViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
+            self.presenter.searchResutls(searchTerm: searchText)
+        })
+    }
+}
