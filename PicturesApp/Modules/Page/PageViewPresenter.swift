@@ -34,7 +34,7 @@ class PageViewPresenter: PageViewPresenterProtocol {
             }
             DispatchQueue.main.async {
                 self.models = data.enumerated().map { (index, data) in
-                    PictureModel(image: data.urls.small, Foo.allCases[index])
+                    PictureModel(image: data.urls.small, animation: Animation.allCases[index])
                 }
                 self.controller?.reloadPictures(models: self.models)
             }
@@ -56,8 +56,4 @@ class PageViewPresenter: PageViewPresenterProtocol {
         components.queryItems = params.map {URLQueryItem(name: $0, value: $1)}
         return components.url!
     }
-}
-
-enum Foo: CaseIterable {
-    case q, w, e, r
 }

@@ -8,16 +8,24 @@ PODS:
     - Moya/Core (= 15.0.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
+  - Realm (10.25.2):
+    - Realm/Headers (= 10.25.2)
+  - Realm/Headers (10.25.2)
+  - RealmSwift (10.25.2):
+    - Realm (= 10.25.2)
 
 DEPENDENCIES:
   - GRDB.swift
   - Kingfisher (~> 7.0)
   - Moya (~> 15.0)
+  - RealmSwift
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - GRDB.swift
     - Kingfisher
+    - Realm
+    - RealmSwift
   trunk:
     - Alamofire
     - Moya
@@ -27,7 +35,9 @@ SPEC CHECKSUMS:
   GRDB.swift: 7ecc8799aaa97cf1fbbcfa9d75821aa920cb713f
   Kingfisher: 184d4d1a8c36666e663caf8e08abe87898595c53
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  Realm: 978303663d0509166498f423d112e5ee97d4c91b
+  RealmSwift: a0c30c1efc49e928a0a6f8fb141bb2629616d79b
 
-PODFILE CHECKSUM: 3f2aef59210a0d8b419b10c825c25853c11d19d3
+PODFILE CHECKSUM: 432cab2ea9a5bc8d1320943022491f3015178122
 
 COCOAPODS: 1.11.3

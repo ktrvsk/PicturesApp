@@ -92,7 +92,7 @@ class ImageCell: UITableViewCell {
     @objc
     func addButtonAction(button: UIButton) {
         let button = button
-        button.isSelected ? (button.alpha = 1) : (button.alpha = 0.5)
+//        button.isSelected ? (button.alpha = 1) : (button.alpha = 0.5)
         imageCellModel?.addInFavorites()
     }
 }

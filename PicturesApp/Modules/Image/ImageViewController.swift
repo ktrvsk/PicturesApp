@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import RealmSwift
 
 protocol ImageViewControllerProtocol: AnyObject {
     func reloadTable(models: [ImageCellModel])

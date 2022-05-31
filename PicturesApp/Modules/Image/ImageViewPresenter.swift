@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 protocol ImageViewPresenterProtocol {
     var controller: ImageViewControllerProtocol? { get set }
@@ -15,7 +16,9 @@ protocol ImageViewPresenterProtocol {
     func switchState(state: ImageViewState)
 }
 
-class ImageViewPresenter: ImageViewPresenterProtocol {    
+class ImageViewPresenter: ImageViewPresenterProtocol {
+    
+    let realm =  try! Realm() // доступ к хранилищу
     
     weak var controller: ImageViewControllerProtocol?
     
@@ -23,6 +26,9 @@ class ImageViewPresenter: ImageViewPresenterProtocol {
     private var favoriteIds: [String] = []
     
     func viewDidLoad() {
+//        let realm =  try! Realm() // доступ к хранилищу
+//        print(Realm.Configuration.defaultConfiguration.fileURL)
+//
         loadData()
     }
     
@@ -37,8 +43,16 @@ class ImageViewPresenter: ImageViewPresenterProtocol {
         case .list:
             controller?.reloadTable(models: models)
         case .favorites:
-            controller?.reloadTable(models: models.filter({ model in
-                favoriteIds.contains(model.title)
+            var readDatabase = try! Realm().objects(DatabaseModel.self)
+            controller?.reloadTable(models: readDatabase.compactMap({ model in
+                guard let url = URL(string: model.image) else {
+                    return nil
+                }
+                return ImageCellModel(image: url, title: model.id, addInFavorites: {
+                    try! self.realm.write {
+                        self.realm.delete(model)
+                    }
+                })
             }))
         }
     }
@@ -53,7 +67,12 @@ class ImageViewPresenter: ImageViewPresenterProtocol {
             DispatchQueue.main.async {
                 self.models = data.map { data in
                     ImageCellModel(image: data.urls.small, title: data.id) {
-                        self.favoriteIds.append(data.id)
+                        let databaseModel = DatabaseModel()
+                        databaseModel.image = data.urls.small.absoluteString
+                        databaseModel.id = data.id
+                        try! self.realm.write({
+                            self.realm.add(databaseModel)
+                        })
                     }
                 }
                 self.controller?.reloadTable(models: self.models)

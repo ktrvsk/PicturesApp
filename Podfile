@@ -7,5 +7,7 @@ target 'PicturesApp' do
 pod 'Moya', '~> 15.0'
 pod 'Kingfisher', '~> 7.0'
 pod 'GRDB.swift'
+use_frameworks! 
+pod 'RealmSwift'
 
 end
