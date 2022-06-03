@@ -8,6 +8,6 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-ACCESS_KEY = X28cz_zbJRftgREMxa0na2SmHSglmnh_A8_s6BUWUKE
-SECRET_KEY = g812j9EP_CXQ_zJeBWWS9EGaHvtoMJAKb-PHzKpSv8c
+ACCESS_KEY = 2XIGRAqt8KnYCEcP7bQ39J9Feakzz8SPL8Ognu-lGOw
+SECRET_KEY = cgTbuM9UcdWdy2fZ_Izy0NyqPYmhe9po6o3lVK5ksf8
 REDIRECT_URL = urn:ietf:wg:oauth:2.0:oob

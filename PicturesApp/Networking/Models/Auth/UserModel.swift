@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserData: Decodable {
+struct UserModel: Decodable {
     let accessToken: String
     let tokenType: String
     let refreshToken: String

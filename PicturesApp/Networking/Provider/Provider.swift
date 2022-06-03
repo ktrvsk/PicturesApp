@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProviderProtocol {
-    func loadData<T: Decodable>(url: URL, completion: @escaping (T) -> Void)
+    func loadData<T: Decodable>(url: URL, method: HttpMethod, completion: @escaping (T) -> Void)
 }
 
 final class Provider: ProviderProtocol {
@@ -20,11 +20,11 @@ final class Provider: ProviderProtocol {
  
     private init() {}
     
-    func loadData<T: Decodable>(url: URL, completion: @escaping (T) -> Void) {
+    func loadData<T: Decodable>(url: URL, method: HttpMethod, completion: @escaping (T) -> Void) {
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-
-        let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+        urlRequest.httpMethod = method.rawValue
+        urlRequest.allHTTPHeaderFields = prepareHeader()
+        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
             
             guard
                 let saveData = data
@@ -39,6 +39,12 @@ final class Provider: ProviderProtocol {
             completion(model)
         }
         task.resume()
+    }
+    
+    private func prepareHeader() -> [String:String]? {
+        var headers = [String:String]()
+        headers["Authorization"] = "Client-ID \(ConstantsNetworking.accessKey ?? "")"
+        return headers
     }
     
     private func parseJSON<T: Decodable>(_ urlData: Data) -> T? {

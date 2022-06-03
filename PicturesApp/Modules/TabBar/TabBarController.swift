@@ -10,22 +10,25 @@ import UIKit
 
 protocol TabBarControllerProtocol: UIViewController {}
 
-class TabBarController: UITabBarController, TabBarControllerProtocol {
+final class TabBarController: UITabBarController, TabBarControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        tabBar
-        
-        viewControllers = [
-            settingController(for: ViewController(), title: "first", image: .init(named: "cloud"))
-        ] //запихнуть все созданные экраны
+        setupTabBar()
     }
     
-    // настройка экрана по отдельность
     private func settingController(for rootController: UIViewController, title: String, image: UIImage?) -> UIViewController {
         let navigationController = UINavigationController(rootViewController: rootController)
         navigationController.tabBarItem.title = title
         navigationController.tabBarItem.image = image
         return navigationController
+    }
+    
+    private func setupTabBar() {
+        viewControllers = [
+            settingController(for: ImageViewController(), title: "", image: SystemImage.firstScreenTabBar),
+            settingController(for: PinterestViewController(), title: "", image: SystemImage.secondScreenTabBar),
+            settingController(for: GalleryViewController(), title: "", image: SystemImage.thirdScreenTabBar),
+            settingController(for: PageViewController(), title: "", image: SystemImage.fourthScreenTabBar)
+        ]
     }
 }

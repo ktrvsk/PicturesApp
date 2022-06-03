@@ -8,16 +8,13 @@
 import Foundation
 
 
-protocol UserDefaultsProtocol {
-    func saveData(data: UserData)
+protocol UserDefaultsStorageProtocol {
+    func saveData(data: UserModel)
 }
 
-final class UserDefaultsStorage: UserDefaultsProtocol {
+final class UserDefaultsStorage: UserDefaultsStorageProtocol {
     
-    static var shared: UserDefaultsStorage = {
-          let instance = UserDefaultsStorage()
-          return instance
-      }()
+    static var shared =  UserDefaultsStorage()
 
       private init() {}
     
@@ -29,11 +26,9 @@ final class UserDefaultsStorage: UserDefaultsProtocol {
         case refreshToken
     }
 
-    func saveData(data: UserData) {
+    func saveData(data: UserModel) {
         standart.set(data.accessToken, forKey: UserKey.accessToken.rawValue)
         let data = standart.string(forKey: UserKey.accessToken.rawValue)
         print(data!)
-//        standart.set(data.tokenType, forKey: UserKey.tokenType.rawValue)
-//        standart.set(data.refreshToken, forKey: UserKey.refreshToken.rawValue)
     }
 }

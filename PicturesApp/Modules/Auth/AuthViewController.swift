@@ -14,14 +14,14 @@ protocol AuthViewControllerProtocol: AnyObject {
     func openNext()
 }
 
-class AuthViewController: UIViewController, AuthViewControllerProtocol {
+final class AuthViewController: UIViewController, AuthViewControllerProtocol {
     
     @IBOutlet private var webView: WKWebView!
     @IBOutlet private var loaderView: UIView!
     @IBOutlet private var activityView: UIActivityIndicatorView!
     
     private let presenter: AuthPresenterProtocol = AuthPresenter()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
@@ -57,7 +57,9 @@ extension AuthViewController: WKNavigationDelegate {
     }
     
     private func getQueryStringParameter(url: String, param: String) -> String? {
-        guard let url = URLComponents(string: url) else { return nil }
+        guard let url = URLComponents(string: url) else {
+            return nil
+        }
         return url.queryItems?.first(where: { $0.name == param })?.value
     }
 }

@@ -1,12 +1,13 @@
 # Uncomment the next line to define a global platform for your project
+source 'https://github.com/CocoaPods/Specs.git'
  platform :ios, '15.0'
 
 target 'PicturesApp' do
-  # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
-
-  # Pods for PicturesApp
 
 pod 'Moya', '~> 15.0'
+pod 'Kingfisher', '~> 7.0'
+pod 'GRDB.swift'
+use_frameworks! 
+pod 'RealmSwift'
 
 end
