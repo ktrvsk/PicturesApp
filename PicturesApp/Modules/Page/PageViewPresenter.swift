@@ -4,18 +4,14 @@
 //
 //  Created by Ksusha on 25.05.2022.
 //
-
-import Foundation
 import UIKit
-
-import Foundation
 
 protocol PageViewPresenterProtocol {
     var controller: PageViewControllerProtocol? { get set }
     func viewDidLoad()
 }
 
-class PageViewPresenter: PageViewPresenterProtocol {
+final class PageViewPresenter: PageViewPresenterProtocol {
     
     weak var controller: PageViewControllerProtocol?
     
@@ -26,9 +22,11 @@ class PageViewPresenter: PageViewPresenterProtocol {
     }
 
     private func loadData() {
-        let parametrs = prepareParametrs()
-        let url = url(params: parametrs)
-        Provider.shared.loadData(url: url, method: .GET) { [weak self] (data: [ImageData]) in
+        guard let url = ImageRequest.shared.url(params: ImageRequest.shared.prepareParameters())
+        else {
+            return
+        }
+        Provider.shared.loadData(url: url, method: .GET) { [weak self] (data: [ImageModel]) in
             guard let self = self else {
                 return
             }
@@ -39,21 +37,5 @@ class PageViewPresenter: PageViewPresenterProtocol {
                 self.controller?.reloadPictures(models: self.models)
             }
         }
-    }
-
-    private func prepareParametrs() -> [String:String] {
-        var parametrs = [String:String]()
-        parametrs["page"] = String(1)
-        parametrs["per_page"] = String(10)
-        return parametrs
-    }
-    
-    private func url(params: [String:String]) -> URL {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.unsplash.com"
-        components.path = "/photos"
-        components.queryItems = params.map {URLQueryItem(name: $0, value: $1)}
-        return components.url!
     }
 }

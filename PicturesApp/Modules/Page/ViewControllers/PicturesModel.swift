@@ -27,6 +27,15 @@ enum Animation: CaseIterable {
 }
 
 extension Animation {
+    
+    enum Constants {
+        static let duration = 0.5
+        static let delay = 0.0
+        static let usingSpringWithDamping = 0.5
+        static let initialSpringVelocity = 0.5
+        static let options = UIView.AnimationOptions.curveEaseOut
+    }
+    
     func startAnimation(view: UIView) {
         switch self {
         case .animationZero:
@@ -36,7 +45,7 @@ extension Animation {
         case .animationSecond:
             secondAnimation(view: view)
         case .animationThird:
-            thirdAnimation(view: view)
+            print("here")
         case .animationFourth:
             print("here")
         case .animationFiveth:
@@ -53,10 +62,10 @@ extension Animation {
     }
     
     private func zeroAnimation(view: UIView) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+        UIView.animate(withDuration: Constants.duration, delay: Constants.delay, usingSpringWithDamping: Constants.usingSpringWithDamping, initialSpringVelocity: Constants.initialSpringVelocity, options: Constants.options) {
             view.transform = CGAffineTransform(translationX: -30, y: 0)
         } completion: { (_) in
-            UIView.animate(withDuration: 0.5, delay: 0 , usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: Constants.duration, delay: Constants.delay, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: Constants.options, animations: {
                 view.alpha = 0
                 view.transform = view.transform.translatedBy(x: 0, y: -200)
             })
@@ -64,9 +73,9 @@ extension Animation {
     }
     
     private func firstAnimation(view: UIView) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+        UIView.animate(withDuration: Constants.duration, delay: Constants.delay, usingSpringWithDamping: Constants.usingSpringWithDamping, initialSpringVelocity: Constants.initialSpringVelocity, options: Constants.options) {
             if let imageView = view as? UIImageView {
-                imageView.image = UIImage(named: "pepeTwo")
+                imageView.image = SystemImage.imageForAnimation
             }
             view.layer.borderWidth = 5
             view.layer.borderColor = UIColor.blue.cgColor
@@ -74,7 +83,7 @@ extension Animation {
     }
     
     private func secondAnimation(view: UIView) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+        UIView.animate(withDuration: Constants.duration, delay: Constants.delay, usingSpringWithDamping: Constants.usingSpringWithDamping, initialSpringVelocity: Constants.initialSpringVelocity, options: Constants.options) {
             let textLayer = CATextLayer()
             view.layer.addSublayer(textLayer)
             textLayer.frame = view.frame
@@ -83,17 +92,5 @@ extension Animation {
             textLayer.font = CTFontCreateWithName("Noteworthy-Light" as CFString, CGFloat(24.0), nil)
         }
     }
-    
-    private func thirdAnimation(view: UIView) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut) {
-            print("hello")
-        }
-    }
-    
-//    private func fourthAnimation(view: UIView) {
-//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut) {
-//
-//        }
-//    }
 }
 

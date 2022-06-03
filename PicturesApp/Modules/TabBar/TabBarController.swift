@@ -10,7 +10,7 @@ import UIKit
 
 protocol TabBarControllerProtocol: UIViewController {}
 
-class TabBarController: UITabBarController, TabBarControllerProtocol {
+final class TabBarController: UITabBarController, TabBarControllerProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBar()
@@ -25,10 +25,10 @@ class TabBarController: UITabBarController, TabBarControllerProtocol {
     
     private func setupTabBar() {
         viewControllers = [
-            settingController(for: ImageViewController(), title: "", image: .init(systemName: "photo.on.rectangle.angled")),
-            settingController(for: CollectionViewController(), title: "", image: .init(systemName: "rectangle.3.group")),
-            settingController(for: GalleryViewController(), title: "", image: .init(systemName: "mail.stack") ),
-            settingController(for: PageViewController(), title: "", image: .init(systemName: "ellipsis.rectangle"))
+            settingController(for: ImageViewController(), title: "", image: SystemImage.firstScreenTabBar),
+            settingController(for: PinterestViewController(), title: "", image: SystemImage.secondScreenTabBar),
+            settingController(for: GalleryViewController(), title: "", image: SystemImage.thirdScreenTabBar),
+            settingController(for: PageViewController(), title: "", image: SystemImage.fourthScreenTabBar)
         ]
     }
 }

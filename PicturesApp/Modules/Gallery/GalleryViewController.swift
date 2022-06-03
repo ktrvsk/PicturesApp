@@ -4,22 +4,21 @@
 //
 //  Created by Ksusha on 23.05.2022.
 //
-
-import Foundation
 import UIKit
 
 protocol GalleryViewControllerProtocol {
-    func reloadCollection(models: [CollectionCellModel])
+    func setModels(models: [CollectionCellModel])
 }
 
 class GalleryViewController: UIViewController, GalleryViewControllerProtocol {
     
-    var constant: Int = 5
+    private lazy var collectionView: UICollectionView = {
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: setupLayout())
+        collection.register(CollectionCell.self, forCellWithReuseIdentifier: CollectionCell.reuseIdentifier)
+        return collection
+    }()
     
-    var controller: GalleryViewController?
-    
-    private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: setupLayout())
-    private var arrayCell: [CollectionCellModel] = []
+    private var collectionCellModels: [CollectionCellModel] = []
     
     private var presenter: GalleryViewPresenterProtocol = GalleryViewPresenter()
     
@@ -31,8 +30,8 @@ class GalleryViewController: UIViewController, GalleryViewControllerProtocol {
         presenter.viewDidLoad()
     }
     
-    func reloadCollection(models: [CollectionCellModel]) {
-        arrayCell = models
+    func setModels(models: [CollectionCellModel]) {
+        collectionCellModels = models
         collectionView.reloadData()
     }
     
@@ -69,7 +68,6 @@ class GalleryViewController: UIViewController, GalleryViewControllerProtocol {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.register(CollectionCell.self, forCellWithReuseIdentifier: CollectionCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.frame = view.bounds
@@ -80,17 +78,25 @@ class GalleryViewController: UIViewController, GalleryViewControllerProtocol {
 
 extension GalleryViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrayCell.count
+        collectionCellModels.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return constant
+        Constants.numberOfSection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.identifier, for: indexPath) as? CollectionCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionCell.reuseIdentifier, for: indexPath) as? CollectionCell else {
             return .init(frame: .zero)
         }
-        return cell.update(with: arrayCell[indexPath.row])
+        return cell.update(with: collectionCellModels[indexPath.row])
+    }
+}
+
+//MARK: - Constants enum
+
+extension GalleryViewController {
+    enum Constants {
+        static let numberOfSection = 5
     }
 }

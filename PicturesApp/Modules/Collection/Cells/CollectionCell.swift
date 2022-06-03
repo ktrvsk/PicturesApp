@@ -10,11 +10,8 @@ import UIKit
 import SnapKit
 
 
-class CollectionCell: UICollectionViewCell {
-    
-    static let identifier = "CollectionCell"
-    
-    private let pictureCollectionView: UIImageView = {
+final class CollectionCell: UICollectionViewCell, Reusable {
+    private let pinterestCollectionView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -33,21 +30,20 @@ class CollectionCell: UICollectionViewCell {
     }
     
     private func setupPicturesImageView() {
-        addSubview(pictureCollectionView)
-        pictureCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        pictureCollectionView.snp.makeConstraints { make in
+        addSubview(pinterestCollectionView)
+        pinterestCollectionView.snp.makeConstraints { make in
             make.left.right.top.bottom.equalToSuperview()
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        pictureCollectionView.image = nil
+        pinterestCollectionView.image = nil
     }
     
     func update(with model: CollectionCellModel) -> Self {
         collectionCellModel = model
-        pictureCollectionView.kf.setImage(with: model.image)
+        pinterestCollectionView.kf.setImage(with: model.image)
         return self
     }
 }

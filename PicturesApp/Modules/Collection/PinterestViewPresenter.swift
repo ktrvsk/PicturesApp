@@ -1,20 +1,20 @@
 //
-//  GalleryViewPresenter.swift
+//  CollectionViewPresenter.swift
 //  PicturesApp
 //
-//  Created by Ksusha on 23.05.2022.
+//  Created by Ksusha on 20.05.2022.
 //
 
 import Foundation
 
-protocol GalleryViewPresenterProtocol {
-    var controller: GalleryViewController? { get set }
+protocol PinterestViewPresenterProtocol {
+    var controller: PinterestViewController? { get set }
     func viewDidLoad()
 }
 
-final class GalleryViewPresenter: GalleryViewPresenterProtocol {
+final class PinterestViewPresenter: PinterestViewPresenterProtocol {
     
-    weak var controller: GalleryViewController?
+    weak var controller: PinterestViewController?
     
     private var models: [CollectionCellModel] = []
     
@@ -35,7 +35,7 @@ final class GalleryViewPresenter: GalleryViewPresenterProtocol {
                 CollectionCellModel(image: data.urls.small, width: data.width, height: data.height)
             }
             DispatchQueue.main.async {
-                self.controller?.setModels(models: self.models)
+                self.controller?.setModels(model: self.models)
             }
         }
     }

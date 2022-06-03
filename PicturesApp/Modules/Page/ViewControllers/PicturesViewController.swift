@@ -10,14 +10,12 @@ import UIKit
 class PictureViewController: UIViewController {
     
     //MARK: - Drawing variables
-    var lastPoint = CGPoint.zero
-    var brushWidth: CGFloat = 10.0
-    var opacity: CGFloat = 1.0
-    var swiped = false
+    private var lastPoint = CGPoint.zero
+    private var brushWidth: CGFloat = 10.0
+    private var opacity: CGFloat = 1.0
+    private var swiped = false
     
-    var index: Int = 0
-    
-    var pictureImageView: UIImageView = {
+    private let pictureImageView: UIImageView = {
         let view = UIImageView()
         view.layer.cornerRadius = 20
         view.layer.masksToBounds = true
@@ -29,14 +27,13 @@ class PictureViewController: UIViewController {
     private let onChangeScrollState: (Bool) -> Void
     
     init(with model: PictureModel, onChangeScrollState: @escaping (Bool) -> Void) {
+        pictureModel = model
+        pictureImageView.kf.setImage(with: model.image)
         self.onChangeScrollState = onChangeScrollState
         super.init(nibName: nil, bundle: nil)
         edgesForExtendedLayout = []
         setupPicturesImageView()
-        pictureModel = model
-        pictureImageView.kf.setImage(with: model.image)
         
-        //setup animation
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAnimation)))
     }
     
@@ -49,13 +46,13 @@ class PictureViewController: UIViewController {
         NSLayoutConstraint.activate([
             pictureImageView.leftAnchor.constraint(equalTo: view.leftAnchor),
             pictureImageView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            pictureImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            pictureImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             pictureImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         ])
     }
     
     @objc
-    func tapAnimation() {
+    private func tapAnimation() {
         pictureModel?.animation.startAnimation(view: pictureImageView)
     }
     
@@ -66,11 +63,11 @@ class PictureViewController: UIViewController {
         
         swiped = false
         if let touch = touches.first {
-            lastPoint = touch.location(in: self.view)
+            lastPoint = touch.location(in: view)
         }
     }
     
-    func drawLineFrom(fromPoint: CGPoint, toPoint: CGPoint) {
+    private func drawLineFrom(fromPoint: CGPoint, toPoint: CGPoint) {
         UIGraphicsBeginImageContext(view.frame.size)
         let context = UIGraphicsGetCurrentContext()
         pictureImageView.image?.draw(in: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height))
@@ -91,13 +88,15 @@ class PictureViewController: UIViewController {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         swiped = true
-        if let touch = touches.first {
-            let currentPoint = touch.location(in: view)
-            drawLineFrom(fromPoint: lastPoint, toPoint: currentPoint)
-            
-            lastPoint = currentPoint
+        guard let touch = touches.first else {
+            return
         }
+        let currentPoint = touch.location(in: view)
+        drawLineFrom(fromPoint: lastPoint, toPoint: currentPoint)
+        
+        lastPoint = currentPoint
     }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         onChangeScrollState(true)
         

@@ -13,35 +13,35 @@ protocol ImageViewControllerProtocol: AnyObject {
     func reloadTable(models: [ImageCellModel])
 }
 
-class ImageViewController: UIViewController, ImageViewControllerProtocol {
+final class ImageViewController: UIViewController, ImageViewControllerProtocol{
     
     private var presenter: ImageViewPresenterProtocol = ImageViewPresenter()
     
+    private var cellModels: [ImageCellModel] = []
+    
     private var timer: Timer?
     
-    private var tableView: UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(ImageCell.self, forCellReuseIdentifier: "ImageCell")
+        tableView.register(ImageCell.self, forCellReuseIdentifier: ImageCell.reuseIdentifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.contentInset.top = 10
         return tableView
     }()
     
-    private var arrayCell: [ImageCellModel] = []
-    
-    private var searchController: UISearchController = {
+    private let searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         return searchController
     }()
     
-    private var arrayItemsForSegmented = ["Pictures", "Favorites"]
+    private var itemsForSegmentedControl = ["Pictures", "Favorites"]
     
     private lazy var segmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl(items: arrayItemsForSegmented)
-        segmentedControl.addTarget(self, action: #selector(suitDidChange(_:)), for: .valueChanged)
+        let segmentedControl = UISegmentedControl(items: itemsForSegmentedControl)
+        segmentedControl.addTarget(self, action: #selector(didChangeSegment(_:)), for: .valueChanged)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.selectedSegmentIndex = 0
         return segmentedControl
@@ -59,7 +59,7 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
     }
     
     func reloadTable(models: [ImageCellModel]) {
-        arrayCell = models
+        cellModels = models
         tableView.reloadData()
     }
     
@@ -94,10 +94,10 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
         view.addSubview(segmentedControl)
         let guide = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
-            segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Constants.segmentedTrailingAnchor),
+            segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.segmentedLeadingAnchor),
             segmentedControl.topAnchor.constraint(equalTo: guide.topAnchor),
-            segmentedControl.heightAnchor.constraint(equalToConstant: 35),
+            segmentedControl.heightAnchor.constraint(equalToConstant: Constants.segmendetHeightAnchor),
             tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
             tableView.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
             tableView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor),
@@ -106,7 +106,7 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
     }
     
     @objc
-    func suitDidChange(_ segmentedControl: UISegmentedControl) {
+    func didChangeSegment(_ segmentedControl: UISegmentedControl) {
         presenter.switchState(state: .init(rawValue: segmentedControl.selectedSegmentIndex) ?? .list)
     }
 }
@@ -115,14 +115,14 @@ class ImageViewController: UIViewController, ImageViewControllerProtocol {
 
 extension ImageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        arrayCell.count
+        cellModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCell", for: indexPath) as? ImageCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.reuseIdentifier, for: indexPath) as? ImageCell else {
             return .init(frame: .zero)
         }
-        return cell.update(with: arrayCell[indexPath.row])
+        return cell.update(with: cellModels[indexPath.row])
     }
 }
 
@@ -132,7 +132,19 @@ extension ImageViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
-            self.presenter.searchResutls(searchTerm: searchText)
+            self.presenter.searchResults(searchTerm: searchText)
         })
     }
 }
+
+//MARK: - Constants enum
+
+extension ImageViewController {
+    private enum Constants {
+        static let segmentedTrailingAnchor: CGFloat = -25
+        static let segmentedLeadingAnchor: CGFloat = 25
+        static let segmendetHeightAnchor: CGFloat = 35
+    }
+}
+
+

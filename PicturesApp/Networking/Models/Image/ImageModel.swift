@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageData: Codable {
+struct ImageModel: Codable {
     let id: String
     let urls: UrlImage
     let width: Int

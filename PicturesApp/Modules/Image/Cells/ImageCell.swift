@@ -8,8 +8,7 @@
 import UIKit
 import Kingfisher
 
-class ImageCell: UITableViewCell {
-    
+final class ImageCell: UITableViewCell, Reusable {
     private lazy var label: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +27,7 @@ class ImageCell: UITableViewCell {
         let button = UIButton()
         button.setTitleColor(.blue, for: .normal)
         let configuration = UIImage.SymbolConfiguration(pointSize: 30, weight: .medium, scale: .medium)
-        button.setImage(UIImage(systemName: "arrow.down.heart", withConfiguration: configuration), for: .normal)
+        button.setImage(SystemImage.buttonImage, for: .normal)
         button.addTarget(self, action: #selector(addButtonAction), for: UIControl.Event.touchUpInside)
         return button
     }()
@@ -39,9 +38,7 @@ class ImageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.isUserInteractionEnabled = false
-        setupPicturesImageView()
-        setupLabel()
-        setupButton()
+        setupCell()
     }
     
     required init?(coder: NSCoder) {
@@ -58,6 +55,12 @@ class ImageCell: UITableViewCell {
         pictureImageView.kf.setImage(with: model.image)
         label.text = model.title
         return self
+    }
+    
+    private func setupCell() {
+        setupPicturesImageView()
+        setupLabel()
+        setupButton()
     }
     
     private func setupLabel() {
@@ -90,9 +93,7 @@ class ImageCell: UITableViewCell {
     }
     
     @objc
-    func addButtonAction(button: UIButton) {
-        let button = button
-//        button.isSelected ? (button.alpha = 1) : (button.alpha = 0.5)
+    private func addButtonAction(button: UIButton) {
         imageCellModel?.addInFavorites()
     }
 }

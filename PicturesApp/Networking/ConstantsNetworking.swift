@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Constants {
+enum ConstantsNetworking {
     static let accessKey = Bundle.main.infoDictionary?["ACCESS_KEY"] as? String
     static let redirectUri = Bundle.main.infoDictionary?["REDIRECT_URL"] as? String
     static let secretKey = Bundle.main.infoDictionary?["SECRET_KEY"] as? String

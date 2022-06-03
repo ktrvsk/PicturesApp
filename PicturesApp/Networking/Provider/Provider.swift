@@ -43,7 +43,7 @@ final class Provider: ProviderProtocol {
     
     private func prepareHeader() -> [String:String]? {
         var headers = [String:String]()
-        headers["Authorization"] = "Client-ID \(Constants.accessKey ?? "")"
+        headers["Authorization"] = "Client-ID \(ConstantsNetworking.accessKey ?? "")"
         return headers
     }
     
